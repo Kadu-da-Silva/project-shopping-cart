@@ -1,4 +1,5 @@
 import { fetchProduct } from './fetchFunctions';
+import { saveCartID } from './cartFunctions';
 
 const arrayPrice = [];
 const handlePriceTotal = (value) => {
