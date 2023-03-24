@@ -1,6 +1,15 @@
-import { removeCartID, saveCartID } from './cartFunctions';
 import { fetchProduct } from './fetchFunctions';
 
+const arrayPrice = [];
+const handlePriceTotal = (value) => {
+  let sum = 0;
+  arrayPrice.push(value);
+  arrayPrice.forEach((item) => {
+    sum += item;
+  });
+  const priceTotal = document.querySelector('.total-price');
+  priceTotal.innerHTML = sum;
+};
 // Esses comentários que estão antes de cada uma das funções são chamados de JSdoc,
 // experimente passar o mouse sobre o nome das funções e verá que elas possuem descrições!
 
@@ -101,6 +110,7 @@ export const createCartProductElement = ({ id, title, price, pictures }) => {
  * @param {number} product.price - Preço do produto.
  * @returns {Element} Elemento de produto.
  */
+
 export const createProductElement = ({ id, title, thumbnail, price }) => {
   const section = document.createElement('section');
   section.className = 'product';
@@ -127,12 +137,15 @@ export const createProductElement = ({ id, title, thumbnail, price }) => {
     const data = { id, title, price, thumbnail };
     saveCartID(data.id);
     const call = await fetchProduct(data.id);
+    console.log(call);
 
     const elementHTML = createCartProductElement(call);
     console.log(elementHTML);
 
     const ol = document.querySelector('.cart__products');
     ol.appendChild(elementHTML);
+
+    handlePriceTotal(price);
   });
 
   section.appendChild(cartButton);

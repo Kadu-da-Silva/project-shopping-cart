@@ -1,10 +1,13 @@
 import { searchCep } from './helpers/cepFunctions';
 import './style.css';
-import { fetchProductsList } from './helpers/fetchFunctions';
-import { createProductElement } from './helpers/shopFunctions';
+import { fetchProduct, fetchProductsList } from './helpers/fetchFunctions';
+import { createCartProductElement, createProductElement } from './helpers/shopFunctions';
+import { getSavedCartIDs } from './helpers/cartFunctions';
 
 const secProduct = document.querySelector('.products');
 const msgLoading = document.querySelector('.loading');
+const ol = document.querySelector('.cart__products');
+const priceTotal = document.querySelector('.total-price');
 
 document.querySelector('.cep-button').addEventListener('click', searchCep);
 
@@ -21,4 +24,27 @@ try {
   console.log(error.message);
 } finally {
   msgLoading.remove();
+}
+
+const arrayIds = getSavedCartIDs();
+const storage = Promise.all(
+  arrayIds.map((element) => new Promise((resolve, reject) => {
+    fetchProduct(element)
+      .then((product) => resolve(product))
+      .catch((error) => reject(error));
+  })),
+);
+console.log(storage);
+
+try {
+  const call = await storage;
+  let sum = 0;
+  console.log(call);
+  call.forEach((item) => {
+    sum += item.price;
+    ol.appendChild(createCartProductElement(item));
+  });
+  priceTotal.innerHTML = sum;
+} catch (error) {
+  console.log(error.message);
 }
