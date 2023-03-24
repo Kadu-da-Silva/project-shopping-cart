@@ -17,5 +17,3 @@ async function handleFetchProducts() {
     console.log(error.message);
   }
 }
-
-handleFetchProducts();
