@@ -17,4 +17,4 @@ try {
   console.log(error.message);
 } finally {
   msgLoading.remove();
-};
+}
