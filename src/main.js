@@ -3,7 +3,7 @@ import './style.css';
 import { fetchProductsList } from './helpers/fetchFunctions';
 import { createProductElement } from './helpers/shopFunctions';
 
-const products = document.querySelectorAll('.products');
+const products = document.querySelector('.products');
 
 document.querySelector('.cep-button').addEventListener('click', searchCep);
 
