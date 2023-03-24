@@ -7,15 +7,15 @@ const products = document.querySelectorAll('.products');
 
 document.querySelector('.cep-button').addEventListener('click', searchCep);
 
-async function handleFetchProducts () {
+async function handleFetchProducts() {
   try {
     const result = await fetchProductsList('computador');
-    result.forEach((item)=>{
-        products.appendChild(createProductElement(item));
+    result.forEach((item) => {
+      products.appendChild(createProductElement(item));
     });
   } catch (error) {
-    console.log(error.message);  
+    console.log(error.message);
   }
-};
+}
 
 handleFetchProducts();
