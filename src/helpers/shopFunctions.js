@@ -180,7 +180,6 @@ export const createProductElement = ({ id, title, thumbnail, price }) => {
     const ol = document.querySelector('.cart__products');
     ol.appendChild(elementHTML);
 
-    // addPriceInTotal(price);
     shoppingCartTotal();
   });
 

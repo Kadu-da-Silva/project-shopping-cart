@@ -8,8 +8,18 @@ const secProduct = document.querySelector('.products');
 const msgLoading = document.querySelector('.loading');
 const ol = document.querySelector('.cart__products');
 const priceTotal = document.querySelector('.total-price');
+const inputCep = document.querySelector('.cart__address');
 
-document.querySelector('.cep-button').addEventListener('click', searchCep);
+const btnCep = document.querySelector('.cep-button');
+btnCep.addEventListener('click', () => {
+  try {
+    const cep = document.querySelector('.cep-input').value;
+    if (!cep) throw new Error('CEP não encontrado');
+    searchCep(cep);
+  } catch (err) {
+    inputCep.textContent = err.message;
+  }
+});
 
 try {
   const result = await fetchProductsList('computador');
