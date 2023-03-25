@@ -1,16 +1,41 @@
 import { fetchProduct } from './fetchFunctions';
-import { saveCartID } from './cartFunctions';
+import { saveCartID, removeCartID } from './cartFunctions';
 
-const arrayPrice = [];
-const handlePriceTotal = (value) => {
-  let sum = 0;
-  arrayPrice.push(value);
-  arrayPrice.forEach((item) => {
-    sum += item;
-  });
+//! Não remove os *price do total
+// const arrayPrice = [];
+// let sum = 0;
+// const addPriceInTotal = (value) => {
+//   arrayPrice.push(value);
+//   arrayPrice.forEach((item) => {
+//     sum += item;
+//   });
+//   const priceTotal = document.querySelector('.total-price');
+//   priceTotal.innerHTML = sum;
+// };
+
+//! Assim vou poder adicionar a função no btn Remove q vai dar certo
+const shoppingCartTotal = () => {
+  //* Cria um array, NodeList, que acessa o carrinho (.cart__product) e dps recebe o preço de cada interação (.product__price__value)
+  const shoppingCart = document.querySelectorAll('.cart__product .product__price__value');
+  console.log(shoppingCart);
+
+  //* elemento DOM do total
   const priceTotal = document.querySelector('.total-price');
-  priceTotal.innerHTML = sum;
+  console.log(priceTotal);
+
+  //* Acessando o valor/conteúdo do elemento
+  console.log(priceTotal.textContent);
+
+  //* Percorrer o array e realizar a soma e subtração
+  priceTotal.textContent = Array.from(shoppingCart)
+    .reduce(function callback(total, priceItem) {
+      //* Number.parseFloat acessa o argumento e retorna um número de ponto flutuante
+      //* textContent para acessar o texto do objeto
+      return total + Number.parseFloat(priceItem.textContent);
+    }, 0);
+  console.log(priceTotal.textContent);
 };
+
 // Esses comentários que estão antes de cada uma das funções são chamados de JSdoc,
 // experimente passar o mouse sobre o nome das funções e verá que elas possuem descrições!
 
@@ -59,6 +84,7 @@ export const getIdFromProduct = (product) => (
 const removeCartProduct = (li, id) => {
   li.remove();
   removeCartID(id);
+  shoppingCartTotal();
 };
 
 /**
@@ -134,10 +160,18 @@ export const createProductElement = ({ id, title, thumbnail, price }) => {
     'Adicionar ao carrinho!',
   );
 
-  cartButton.addEventListener('click', async () => {
-    const data = { id, title, price, thumbnail };
-    saveCartID(data.id);
-    const call = await fetchProduct(data.id);
+  cartButton.addEventListener('click', async (event) => {
+    console.log(event.target.classList.contains('product__add'));
+
+    console.log(event.target.closest('.product'));
+    const object = event.target.closest('.product');
+
+    console.log(object.firstChild.textContent);
+    const ID = object.firstChild.textContent;
+
+    saveCartID(ID);
+
+    const call = await fetchProduct(ID);
     console.log(call);
 
     const elementHTML = createCartProductElement(call);
@@ -146,7 +180,8 @@ export const createProductElement = ({ id, title, thumbnail, price }) => {
     const ol = document.querySelector('.cart__products');
     ol.appendChild(elementHTML);
 
-    handlePriceTotal(price);
+    // addPriceInTotal(price);
+    shoppingCartTotal();
   });
 
   section.appendChild(cartButton);
